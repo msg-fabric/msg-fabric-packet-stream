@@ -1,9 +1,9 @@
 require('source-map-support').install()
 
 import {TextEncoder, TextDecoder} from 'util'
-import createPacketParser from '../dist/dataview'
+import {createDataViewPacketParser} from '../dist'
 
-const pp = createPacketParser @:
+const pp = createDataViewPacketParser @:
   TextEncoder, TextDecoder
 
 import demo_common from './_demo_common.jsy'

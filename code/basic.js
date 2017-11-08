@@ -5,12 +5,18 @@ export default function asPacketParserAPI(packet_impl_methods) ::
     packMessage
     asBuffer
     concatBuffers
-    unpackId
+    unpackId, unpack_utf8
   = packet_impl_methods
 
   const msg_obj_proto = @:
-    sliceBody() :: return this._raw_.slice @ this.body_offset
-    sliceHeader() :: return this._raw_.slice @ this.header_offset, this.body_offset
+    header_buffer() :: return this._raw_.slice @ this.header_offset, this.body_offset
+    header_utf8() :: return unpack_utf8 @ this.header_buffer()
+    header_json() :: return JSON.parse @ this.header_utf8() || null
+
+    body_buffer() :: return this._raw_.slice @ this.body_offset
+    body_utf8() :: return unpack_utf8 @ this.body_buffer()
+    body_json() :: return JSON.parse @ this.body_utf8() || null
+
     unpackId(buf, offset=8) :: return unpackId(buf || this._raw_, offset)
 
   const packetParserAPI = Object.assign @

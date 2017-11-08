@@ -1,7 +1,7 @@
 require('source-map-support').install()
-import createPacketParser from '../dist/buffer'
+import {createBufferPacketParser} from '../dist'
 
-const pp = createPacketParser()
+const pp = createBufferPacketParser()
 
 import demo_common from './_demo_common.jsy'
 demo_common @ pp

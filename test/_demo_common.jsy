@@ -29,8 +29,8 @@ export default function(pp) ::
 
   function log_complete(prefix, complete) ::
     complete.forEach @ e => ::
-      e.body = Buffer(e.sliceBody()).toString()
-      e.header = Buffer(e.sliceHeader()).toString()
+      e.body = e.body_utf8()
+      e.header = e.header_utf8()
 
     console.log @ `\n${prefix}`
     console.dir @ complete, @: colors: true
