@@ -1,6 +1,6 @@
 {
   "name": "msg-fabric-packet-stream",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "license": "BSD-2-Clause",
   "author": "Shane Holloway <shane.holloway@ieee.org>",

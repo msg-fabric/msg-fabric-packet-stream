@@ -106,6 +106,9 @@ export default function createBufferPacketParser(options={}) ::
 
 
   function asBuffer(buf) ::
+    if null === buf || undefined === buf ::
+      return Buffer(0)
+
     if Buffer.isBuffer(buf) ::
       return buf
 

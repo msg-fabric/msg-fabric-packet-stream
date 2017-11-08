@@ -118,6 +118,9 @@ export default function createDataViewPacketParser(options={}) ::
 
 
   function asBuffer(buf) ::
+    if null === buf || undefined === buf ::
+      return new ArrayBuffer(0)
+
     if undefined !== buf.byteLength ::
       if undefined === buf.buffer ::
         return buf
