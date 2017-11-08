@@ -20,7 +20,7 @@
     "code/",
     "test/"
   ],
-  "main": "dist/index.js",
+  "main": "dist/index",
   "module": "dist/index.mjs",
   "browser": "dist/dataview.umd.js",
   "dependencies": {},
