@@ -32,10 +32,9 @@ export default function asPacketParserAPI(packet_impl_methods) ::
 
   function packMessageObj(...args) ::
     const msg_raw = packMessage @ ...args
-    const msg_obj = asMsgObj @ parseHeader @ msg_raw
-    Object.defineProperties @ msg_obj, @:
-      _raw_: @{} value: msg_raw
-    return msg_obj
+    const msg = parseHeader @ msg_raw
+    msg._raw_ = msg_raw
+    return asMsgObj(msg)
 
 
   function asMsgObj({info, pkt_header_len, packet_len, header_len, _raw_}) ::
