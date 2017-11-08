@@ -1,5 +1,7 @@
 import babel from 'rollup-plugin-babel'
 
+const sourcemap = 'inline'
+
 const externals = []
 
 const plugins = [jsy_plugin()]
@@ -7,16 +9,16 @@ const plugins = [jsy_plugin()]
 export default [
 	{ input: 'code/index.cjs.js',
 		output: [{ file: `dist/index.js`, format: 'cjs' }],
-    externals, plugins },
+    sourcemap, externals, plugins },
 
 	{ input: 'code/index.mjs',
 		output: [{ file: `dist/index.mjs`, format: 'es' }],
-    externals, plugins },
+    sourcemap, externals, plugins },
 
 	{ input: 'code/dataview.js',
     name: 'msg-fabric-packet-stream/dataview',
 		output: [{ file: `dist/dataview.umd.js`, format: 'umd' }],
-    externals, plugins },
+    sourcemap, externals, plugins },
 ]
 
 
