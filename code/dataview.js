@@ -63,6 +63,8 @@ export default function createDataViewPacketParser(options={}) ::
 
   function packMessage(...args) ::
     let {type, ttl, id_router, id_target, header, body} = Object.assign @ {}, ...args
+    if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
+    if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
     header = asBuffer(header, 'header')
     body = asBuffer(body, 'body')
 
@@ -77,8 +79,8 @@ export default function createDataViewPacketParser(options={}) ::
     dv.setUint16 @  4, header.byteLength, little_endian
     dv.setUint8  @  6, type || 0, little_endian
     dv.setUint8  @  7, ttl || default_ttl, little_endian
-    dv.setInt32 @  8, 0 | id_router, little_endian
-    dv.setInt32 @ 12, 0 | id_target, little_endian
+    dv.setInt32  @  8, 0 | id_router, little_endian
+    dv.setInt32  @ 12, 0 | id_target, little_endian
 
     const u8 = new Uint8Array(array)
     u8.set @ new Uint8Array(header), pkt_header_len
@@ -122,7 +124,7 @@ export default function createDataViewPacketParser(options={}) ::
       return pack_utf8(buf)
 
     if Array.isArray(buf) ::
-      if Number.isSafeInteger @ buf[0] ::
+      if Number.isInteger @ buf[0] ::
         return Uint8Array.from(buf).buffer
       return concat @ buf.map @ asBuffer
 

@@ -1,4 +1,8 @@
+import * as assert from 'assert'
+
 export default function(pp) ::
+  assert.throws @ pp.packMessage
+
   const asMsg = (body, header) => pp.packMessage @:
     id_router: 0xaaaaaaaa
     body: body

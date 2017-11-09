@@ -56,6 +56,8 @@ export default function createBufferPacketParser(options={}) ::
 
   function packMessage(...args) ::
     let {type, ttl, id_router, id_target, header, body} = Object.assign @ {}, ...args
+    if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
+    if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
     header = asBuffer(header)
     body = asBuffer(body)
 
@@ -104,7 +106,7 @@ export default function createBufferPacketParser(options={}) ::
       return Buffer.from(buf) // TypedArray or ArrayBuffer
 
     if Array.isArray(buf) ::
-      if Number.isSafeInteger @ buf[0] ::
+      if Number.isInteger @ buf[0] ::
         return Buffer.from(buf)
       return Buffer.concat @ buf.map @ asBuffer
 
