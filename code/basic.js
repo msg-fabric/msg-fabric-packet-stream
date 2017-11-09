@@ -28,6 +28,8 @@ export default function asPacketParserAPI(packet_impl_methods) ::
       packetStream
       asMsgObj
       msg_obj_proto
+
+  msg_obj_proto.packetParser = packetParserAPI
   return packetParserAPI
 
 
