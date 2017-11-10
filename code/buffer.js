@@ -81,10 +81,10 @@ export default function createBufferPacketParser(options={}) ::
 
   function packId(id, offset) ::
     const buf = Buffer.alloc(4)
-    buf.writeInt32LE(id, offset)
+    buf.writeInt32LE @ 0 | id, offset||0
     return buf
   function unpackId(buf, offset) ::
-    return buf.readInt32LE(offset)
+    return buf.readInt32LE @ offset||0
 
   function pack_utf8(str) ::
     return Buffer.from(str, 'utf-8')

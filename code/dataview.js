@@ -90,7 +90,7 @@ export default function createDataViewPacketParser(options={}) ::
 
   function packId(id, offset) ::
     const buf = new ArrayBuffer(4)
-    new DataView(buf).setInt32 @ offset||0, id, little_endian
+    new DataView(buf).setInt32 @ offset||0, 0 | id, little_endian
     return buf
   function unpackId(buf, offset) ::
     const dv = new DataView @ asBuffer(buf)
