@@ -24,6 +24,7 @@ export default function asPacketParserAPI(packet_impl_methods) ::
     Object.create(null)
     packet_impl_methods
     @{}
+      isPacketParser() :: return true
       packMessageObj
       packetStream
       asMsgObj
