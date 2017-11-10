@@ -1,15 +1,15 @@
 import * as assert from 'assert'
 
 export default function(pp) ::
-  assert.throws @ pp.packMessage
+  assert.throws @ pp.packPacket
 
-  const asMsg = (body, header) => pp.packMessage @:
+  const asPkt = (body, header) => pp.packPacket @:
     id_router: 0xaaaaaaaa
     body: body
     header: header || ''
 
   if 1 ::
-    const buf = asMsg @ 'body', 'header'
+    const buf = asPkt @ 'body', 'header'
     const ans = pp.parseHeader @ buf
     console.log @
     console.dir @ ans, @: colors: true, showHidden: true
@@ -20,10 +20,10 @@ export default function(pp) ::
   if 1 ::
     const feed = pp.packetStream()
     let mz = @#
-      asMsg @ '', ''
-      asMsg @ 'A', 'BBB'
-      asMsg @ 'CC', 'DDDDD'
-      asMsg @ 'EEEE', 'FFFFFFFF'
+      asPkt @ '', ''
+      asPkt @ 'A', 'BBB'
+      asPkt @ 'CC', 'DDDDD'
+      asPkt @ 'EEEE', 'FFFFFFFF'
 
     console.log @ mz.map @ e => Buffer.from(e)
     mz = pp.concatBuffers @ mz

@@ -25,7 +25,7 @@ const default_ttl = 31
 
 export default function createBufferPacketParser(options={}) ::
   return asPacketParserAPI @:
-    parseHeader, packMessage
+    parseHeader, packPacket
     packId, unpackId, pack_utf8, unpack_utf8
 
     asBuffer, concatBuffers
@@ -54,7 +54,7 @@ export default function createBufferPacketParser(options={}) ::
     return @: info, pkt_header_len, packet_len, header_len
 
 
-  function packMessage(...args) ::
+  function packPacket(...args) ::
     let {type, ttl, id_router, id_target, header, body} = Object.assign @ {}, ...args
     if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
     if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
@@ -75,7 +75,7 @@ export default function createBufferPacketParser(options={}) ::
 
     const buf = Buffer.concat @# pkt, header, body
     if packet_len !== buf.byteLength ::
-      throw new Error @ `Packed message length mismatch (library error)`
+      throw new Error @ `Packet length mismatch (library error)`
     return buf
 
 

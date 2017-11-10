@@ -2,13 +2,13 @@
 export default function asPacketParserAPI(packet_impl_methods) ::
   const @{}
     parseHeader
-    packMessage
+    packPacket
     asBuffer
     concatBuffers
     unpackId, unpack_utf8
   = packet_impl_methods
 
-  const msg_obj_proto = @:
+  const pkt_obj_proto = @:
     header_buffer() :: return this._raw_.slice @ this.header_offset, this.body_offset
     header_utf8(buf) :: return unpack_utf8 @ buf || this.header_buffer()
     header_json(buf) :: return JSON.parse @ this.header_utf8(buf) || null
@@ -25,34 +25,34 @@ export default function asPacketParserAPI(packet_impl_methods) ::
     packet_impl_methods
     @{}
       isPacketParser() :: return true
-      packMessageObj
+      packPacketObj
       packetStream
-      asMsgObj
-      msg_obj_proto
+      asPktObj
+      pkt_obj_proto
 
-  msg_obj_proto.packetParser = packetParserAPI
+  pkt_obj_proto.packetParser = packetParserAPI
   return packetParserAPI
 
 
-  function packMessageObj(...args) ::
-    const msg_raw = packMessage @ ...args
-    const msg = parseHeader @ msg_raw
-    msg._raw_ = msg_raw
-    return asMsgObj(msg)
+  function packPacketObj(...args) ::
+    const pkt_raw = packPacket @ ...args
+    const pkt = parseHeader @ pkt_raw
+    pkt._raw_ = pkt_raw
+    return asPktObj(pkt)
 
 
-  function asMsgObj({info, pkt_header_len, packet_len, header_len, _raw_}) ::
+  function asPktObj({info, pkt_header_len, packet_len, header_len, _raw_}) ::
     let body_offset = pkt_header_len + header_len
     if body_offset > packet_len ::
-      body_offset = null // invalid message construction
+      body_offset = null // invalid packet construction
 
-    const msg_obj = Object.create @ msg_obj_proto, @:
+    const pkt_obj = Object.create @ pkt_obj_proto, @:
       header_offset: @{} value: pkt_header_len
       body_offset: @{} value: body_offset
       packet_len: @{} value: packet_len
       _raw_: @{} value: _raw_
 
-    return Object.assign @ msg_obj, info
+    return Object.assign @ pkt_obj, info
 
 
   function packetStream(options) ::
@@ -71,13 +71,13 @@ export default function asPacketParserAPI(packet_impl_methods) ::
       qByteLen += data.byteLength
 
       while 1 ::
-        const msg = parseTipMessage()
-        if undefined !== msg ::
-          complete.push @ msg
+        const pkt = parseTipPacket()
+        if undefined !== pkt ::
+          complete.push @ pkt
         else return complete
 
 
-    function parseTipMessage() ::
+    function parseTipPacket() ::
       if null === tip ::
         if 0 === q.length ::
           return
@@ -113,7 +113,7 @@ export default function asPacketParserAPI(packet_impl_methods) ::
         tip._raw_ = concatBuffers @ parts, len
 
       ::
-        const msg_obj = asMsgObj(tip)
+        const pkt_obj = asPktObj(tip)
         tip = null
-        return msg_obj
+        return pkt_obj
 

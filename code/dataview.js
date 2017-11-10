@@ -30,7 +30,7 @@ export default function createDataViewPacketParser(options={}) ::
   const _TextDecoder_ = options.TextDecoder || TextDecoder
 
   return asPacketParserAPI @:
-    parseHeader, packMessage
+    parseHeader, packPacket
     packId, unpackId, pack_utf8, unpack_utf8
 
     asBuffer, concatBuffers
@@ -61,7 +61,7 @@ export default function createDataViewPacketParser(options={}) ::
     return @: info, pkt_header_len, packet_len, header_len
 
 
-  function packMessage(...args) ::
+  function packPacket(...args) ::
     let {type, ttl, id_router, id_target, header, body} = Object.assign @ {}, ...args
     if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
     if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
