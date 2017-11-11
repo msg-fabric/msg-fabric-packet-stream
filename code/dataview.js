@@ -62,7 +62,9 @@ export default function createDataViewPacketParser(options={}) ::
 
 
   function packPacket(...args) ::
-    let {type, ttl, id_router, id_target, header, body} = Object.assign @ {}, ...args
+    let {type, ttl, id_router, id_target, header, body} =
+      1 === args.length ? args[0] : Object.assign @ {}, ...args
+
     if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
     if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
     header = asBuffer(header, 'header')
