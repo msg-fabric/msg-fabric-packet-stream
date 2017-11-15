@@ -25,7 +25,7 @@ const default_ttl = 31
 
 export default function createBufferPacketParser(options={}) ::
   return asPacketParserAPI @:
-    parseHeader, packPacket
+    parseHeader, packPacket, fwdHeader
     packId, unpackId, pack_utf8, unpack_utf8
 
     asBuffer, concatBuffers
@@ -51,7 +51,7 @@ export default function createBufferPacketParser(options={}) ::
     const id_router = buf.readInt32LE @ 8
     const id_target = buf.readInt32LE @ 12
     const info = @{} type, ttl, id_router, id_target
-    return @: info, pkt_header_len, packet_len, header_len
+    return @{} info, pkt_header_len, packet_len, header_len
 
 
   function packPacket(...args) ::
@@ -66,18 +66,25 @@ export default function createBufferPacketParser(options={}) ::
     const packet_len = pkt_header_len + header.byteLength + body.byteLength
     if packet_len > 0xffff :: throw new Error @ `Packet too large`
 
-    const pkt = Buffer.alloc @ pkt_header_len
-    pkt.writeUInt16LE @ signature, 0
-    pkt.writeUInt16LE @ packet_len, 2
-    pkt.writeUInt16LE @ header.byteLength, 4
-    pkt.writeUInt8 @ type || 0, 6
-    pkt.writeUInt8 @ ttl || default_ttl, 7
-    pkt.writeInt32LE @ 0 | id_router, 8
-    pkt.writeInt32LE @ 0 | id_target, 12
+    const pkthdr = Buffer.alloc @ pkt_header_len
+    pkthdr.writeUInt16LE @ signature, 0
+    pkthdr.writeUInt16LE @ packet_len, 2
+    pkthdr.writeUInt16LE @ header.byteLength, 4
+    pkthdr.writeUInt8 @ type || 0, 6
+    pkthdr.writeUInt8 @ ttl || default_ttl, 7
+    pkthdr.writeInt32LE @ 0 | id_router, 8
+    pkthdr.writeInt32LE @ 0 | id_target, 12
 
-    const buf = Buffer.concat @# pkt, header, body
+    const buf = Buffer.concat @# pkthdr, header, body
     if packet_len !== buf.byteLength ::
       throw new Error @ `Packet length mismatch (library error)`
+    return buf
+
+
+  function fwdHeader(buf, id_router, id_target) ::
+    buf = new Buffer(buf)
+    if null != id_router :: buf.writeInt32LE @ 0 | id_router, 8
+    if null != id_target :: buf.writeInt32LE @ 0 | id_target, 12
     return buf
 
 

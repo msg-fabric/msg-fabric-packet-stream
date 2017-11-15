@@ -30,7 +30,7 @@ export default function createDataViewPacketParser(options={}) ::
   const _TextDecoder_ = options.TextDecoder || TextDecoder
 
   return asPacketParserAPI @:
-    parseHeader, packPacket
+    parseHeader, packPacket, fwdHeader
     packId, unpackId, pack_utf8, unpack_utf8
 
     asBuffer, concatBuffers
@@ -58,7 +58,7 @@ export default function createDataViewPacketParser(options={}) ::
     const id_router = dv.getInt32 @ 8, little_endian
     const id_target = dv.getInt32 @ 12, little_endian
     const info = @{} type, ttl, id_router, id_target
-    return @: info, pkt_header_len, packet_len, header_len
+    return @{} info, pkt_header_len, packet_len, header_len
 
 
   function packPacket(...args) ::
@@ -73,9 +73,8 @@ export default function createDataViewPacketParser(options={}) ::
     const len = pkt_header_len + header.byteLength + body.byteLength
     if len > 0xffff :: throw new Error @ `Packet too large`
 
-    const array = new ArrayBuffer(len)
-
-    const dv = new DataView @ array, 0, pkt_header_len
+    const pkthdr = new ArrayBuffer(len)
+    const dv = new DataView @ pkthdr, 0, pkt_header_len
     dv.setUint16 @  0, signature, little_endian
     dv.setUint16 @  2, len, little_endian
     dv.setUint16 @  4, header.byteLength, little_endian
@@ -84,10 +83,18 @@ export default function createDataViewPacketParser(options={}) ::
     dv.setInt32  @  8, 0 | id_router, little_endian
     dv.setInt32  @ 12, 0 | id_target, little_endian
 
-    const u8 = new Uint8Array(array)
+    const u8 = new Uint8Array(pkthdr)
     u8.set @ new Uint8Array(header), pkt_header_len
     u8.set @ new Uint8Array(body), pkt_header_len + header.byteLength
     return array
+
+
+  function fwdHeader(buf, id_router, id_target) ::
+    buf = new Uint8Array(buf).buffer
+    const dv = new DataView @ buf, 0, pkt_header_len
+    if null != id_router :: dv.setInt32  @  8, 0 | id_router, little_endian
+    if null != id_target :: dv.setInt32  @ 12, 0 | id_target, little_endian
+    return buf
 
 
   function packId(id, offset) ::
