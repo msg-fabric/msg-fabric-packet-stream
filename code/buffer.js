@@ -58,8 +58,8 @@ export default function createBufferPacketParser(options={}) ::
     let {type, ttl, id_router, id_target, header, body} =
       1 === args.length ? args[0] : Object.assign @ {}, ...args
 
-    if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
-    if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
+    if Number.isNaN(+id_router) :: throw new Error @ `Invalid id_router`
+    if id_target && Number.isNaN(+id_target) :: throw new Error @ `Invalid id_target`
     header = asBuffer(header)
     body = asBuffer(body)
 

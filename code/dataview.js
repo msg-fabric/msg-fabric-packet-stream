@@ -65,8 +65,8 @@ export default function createDataViewPacketParser(options={}) ::
     let {type, ttl, id_router, id_target, header, body} =
       1 === args.length ? args[0] : Object.assign @ {}, ...args
 
-    if ! Number.isInteger(id_router) :: throw new Error @ `Invalid id_router`
-    if id_target && ! Number.isInteger(id_target) :: throw new Error @ `Invalid id_target`
+    if Number.isNaN(+id_router) :: throw new Error @ `Invalid id_router`
+    if id_target && Number.isNaN(+id_target) :: throw new Error @ `Invalid id_target`
     header = asBuffer(header, 'header')
     body = asBuffer(body, 'body')
 
@@ -86,7 +86,7 @@ export default function createDataViewPacketParser(options={}) ::
     const u8 = new Uint8Array(pkthdr)
     u8.set @ new Uint8Array(header), pkt_header_len
     u8.set @ new Uint8Array(body), pkt_header_len + header.byteLength
-    return array
+    return pkthdr
 
 
   function fwdHeader(buf, id_router, id_target) ::
