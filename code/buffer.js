@@ -54,9 +54,8 @@ export default function createBufferPacketParser(options={}) ::
     return @{} info, pkt_header_len, packet_len, header_len
 
 
-  function packPacket(...args) ::
-    let {type, ttl, id_router, id_target, header, body} =
-      1 === args.length ? args[0] : Object.assign @ {}, ...args
+  function packPacket(pkt_info) ::
+    let {type, ttl, id_router, id_target, header, body} = pkt_info
 
     if Number.isNaN(+id_router) :: throw new Error @ `Invalid id_router`
     if id_target && Number.isNaN(+id_target) :: throw new Error @ `Invalid id_target`

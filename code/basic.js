@@ -33,8 +33,8 @@ export default function asPacketParserAPI(packet_impl_methods) ::
   return packetParserAPI
 
 
-  function packPacketObj(...args) ::
-    const pkt_raw = packPacket @ ...args
+  function packPacketObj(pkt_info) ::
+    const pkt_raw = packPacket @ pkt_info
     const pkt = parseHeader @ pkt_raw
     pkt._raw_ = pkt_raw
     return asPktObj(pkt)
