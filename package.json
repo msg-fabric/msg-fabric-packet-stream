@@ -12,34 +12,10 @@
     "type": "git",
     "url": "git+ssh://git@github.com/shanewholloway/msg-fabric-packet-stream.git"
   },
-  "keywords": [
-    "ecosystem:msg-fabric"
-  ],
-  "files": [
-    "dist/",
-    "code/",
-    "test/"
-  ],
-  "main": "dist/index",
-  "module": "dist/index.mjs",
-  "browser": "dist/dataview.umd.js",
+  "keywords": [],
+  "files": ["do-not-use.js"],
+  "main": "do-not-use.js",
   "dependencies": {},
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-jsy": "^0.9.3",
-    "rollup": "^0.52.1",
-    "rollup-plugin-babel": "^3.0.2",
-    "tap-lite-tester": "^0.5.2"
-  },
-  "babel": {
-    "presets": "jsy/lean"
-  },
-  "scripts": {
-    "build": "rollup --config",
-    "watch": "npm -s run build -- --watch",
-    "demo:dataview": "babel-node test/demo-dataview.jsy",
-    "demo:buffer": "babel-node test/demo-buffer.jsy",
-    "pretest": "npm -s run build",
-    "test": "true"
-  }
+  "devDependencies": {},
+  "scripts": { }
 }
