@@ -1,7 +1,0 @@
-require('source-map-support').install()
-import {createBufferPacketParser} from '../dist'
-
-const pp = createBufferPacketParser()
-
-import demo_common from './_demo_common.jsy'
-demo_common @ pp
